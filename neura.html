@@ -1,0 +1,1272 @@
+<!DOCTYPE html>
+<!-- saved from url=(0074)file:///C:/Users/Hello/Downloads/Telegram%20Desktop/neura%20(1)%20(2).html -->
+<html lang="en"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NEURA — AI-Powered Behavioral Health OS</title>
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link href="./neura_files/css2" rel="stylesheet">
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --bg:#0a0c10;--bg2:#0f1117;--bg3:#161b24;--bg4:#1e2535;
+    --border:#ffffff12;--border2:#ffffff1e;--border3:#ffffff30;
+    --text:#e8eaf0;--text2:#9ba3b5;--text3:#5c657a;
+    --accent:#4f8ef7;--accent2:#7b5ea7;--accent3:#3ecf8e;--accent4:#f7a94f;--accent5:#f75f5f;
+    --font:'DM Sans',sans-serif;--mono:'Space Mono',monospace;
+    --r:12px;--r2:18px;--r3:24px;
+  }
+  body{background:var(--bg);color:var(--text);font-family:var(--font);min-height:100vh;overflow-x:hidden}
+  #app{display:flex;min-height:100vh}
+
+  /* ── Sidebar ── */
+  #sidebar{
+    width:220px;flex-shrink:0;background:var(--bg2);
+    border-right:1px solid var(--border);
+    display:flex;flex-direction:column;padding:20px 0;
+    position:sticky;top:0;height:100vh;overflow:hidden;
+  }
+  .brand{padding:0 20px 24px;border-bottom:1px solid var(--border)}
+  .brand-name{
+    font-size:20px;font-weight:500;letter-spacing:-0.5px;
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  }
+  .brand-sub{font-size:11px;color:var(--text3);font-family:var(--mono);margin-top:2px;letter-spacing:1px}
+  .nav{padding:16px 12px;flex:1}
+  .nav-item{
+    display:flex;align-items:center;gap:10px;padding:10px 12px;
+    border-radius:var(--r);cursor:pointer;transition:all .2s;
+    font-size:13.5px;color:var(--text2);margin-bottom:2px;border:1px solid transparent;
+  }
+  .nav-item:hover{background:var(--bg3);color:var(--text)}
+  .nav-item.active{background:var(--bg4);color:var(--text);border-color:var(--border2)}
+  .nav-icon{width:18px;height:18px;flex-shrink:0;opacity:.7}
+  .nav-item.active .nav-icon{opacity:1}
+  .sidebar-footer{padding:16px 20px;border-top:1px solid var(--border)}
+  .csi-mini{background:var(--bg3);border:1px solid var(--border2);border-radius:var(--r);padding:12px;text-align:center}
+  .csi-mini-label{font-size:10px;color:var(--text3);font-family:var(--mono);letter-spacing:1px;margin-bottom:6px}
+  .csi-mini-score{font-size:28px;font-weight:500;font-family:var(--mono);color:var(--accent3)}
+  .csi-mini-sub{font-size:10px;color:var(--text3);margin-top:2px}
+
+  /* ── Main ── */
+  #main{flex:1;overflow-y:auto;min-width:0}
+  .page{display:none;padding:28px}
+  .page.active{display:block}
+  .page-header{margin-bottom:28px}
+  .page-title{font-size:22px;font-weight:500;letter-spacing:-0.5px}
+  .page-subtitle{font-size:13px;color:var(--text2);margin-top:4px}
+
+  /* ── Cards ── */
+  .card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+  .card-label{font-size:11px;font-family:var(--mono);letter-spacing:1px;color:var(--text3);margin-bottom:8px;text-transform:uppercase}
+  .card-value{font-size:28px;font-weight:500;font-family:var(--mono)}
+  .card-desc{font-size:12px;color:var(--text3);margin-top:4px}
+  .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:20px}
+  .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px}
+  .grid-2{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px}
+
+  /* ── CSI Ring ── */
+  .csi-section{
+    background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);
+    padding:28px;margin-bottom:20px;display:flex;gap:32px;align-items:center;
+  }
+  .csi-ring-wrap{position:relative;width:160px;height:160px;flex-shrink:0}
+  .csi-ring-wrap svg{transform:rotate(-90deg)}
+  .csi-ring-center{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+  .csi-score{font-size:36px;font-weight:500;font-family:var(--mono);color:var(--accent3)}
+  .csi-label{font-size:10px;font-family:var(--mono);letter-spacing:1.5px;color:var(--text3)}
+  .csi-info{flex:1}
+  .csi-title{font-size:17px;font-weight:500;margin-bottom:6px}
+  .csi-desc{font-size:13px;color:var(--text2);line-height:1.6;margin-bottom:16px}
+  .factors-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .factor-item{background:var(--bg3);border-radius:var(--r);padding:10px}
+  .factor-name{font-size:10px;font-family:var(--mono);color:var(--text3);letter-spacing:.8px;margin-bottom:6px}
+  .factor-bar-bg{height:4px;background:var(--bg4);border-radius:99px;overflow:hidden}
+  .factor-bar{height:100%;border-radius:99px;transition:width .8s ease}
+  .factor-val{font-size:12px;font-weight:500;margin-top:4px;font-family:var(--mono)}
+
+  /* ── Pattern chips ── */
+  .pattern-row{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+  .pattern-chip{display:flex;align-items:center;gap:7px;padding:7px 12px;border-radius:99px;border:1px solid;font-size:12px;cursor:pointer;transition:all .2s}
+  .chip-dot{width:7px;height:7px;border-radius:50%}
+  .chip-danger{border-color:rgba(247,95,95,.3);color:#f79ba1;background:rgba(247,95,95,.07)}
+  .chip-warning{border-color:rgba(247,169,79,.3);color:#f7c87f;background:rgba(247,169,79,.07)}
+  .chip-ok{border-color:rgba(62,207,142,.3);color:#7de8b5;background:rgba(62,207,142,.07)}
+  .chip-info{border-color:rgba(79,142,247,.3);color:#9bb8f7;background:rgba(79,142,247,.07)}
+
+  /* ── Charts ── */
+  .chart-wrap{position:relative;width:100%;height:220px;margin-top:12px}
+
+  /* ── Heatmap ── */
+  .heatmap-grid{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:10px}
+  .heatmap-cell{height:20px;border-radius:3px;transition:all .2s}
+  .heatmap-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--text3);font-family:var(--mono);margin-top:4px}
+
+  /* ── Interventions ── */
+  .intervention-card{
+    background:var(--bg3);border:1px solid var(--border);border-radius:var(--r2);
+    padding:18px;display:flex;gap:16px;align-items:flex-start;cursor:pointer;
+    transition:all .2s;margin-bottom:12px;
+  }
+  .intervention-card:hover{border-color:var(--border3);background:var(--bg4)}
+  .int-icon{width:40px;height:40px;border-radius:var(--r);display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .int-title{font-size:14px;font-weight:500;margin-bottom:4px}
+  .int-desc{font-size:12px;color:var(--text2);line-height:1.5}
+  .int-badge{display:inline-block;font-size:10px;font-family:var(--mono);padding:2px 8px;border-radius:99px;margin-top:8px;letter-spacing:.5px}
+
+  /* ── Reflection ── */
+  .reflection-card{
+    background:linear-gradient(135deg,rgba(79,142,247,.06),rgba(123,94,167,.06));
+    border:1px solid rgba(79,142,247,.2);border-radius:var(--r2);padding:22px;margin-bottom:16px;
+  }
+  .reflection-header{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .reflection-dot{width:8px;height:8px;border-radius:50%;background:var(--accent);animation:pulse 2s infinite;flex-shrink:0}
+  .reflection-date{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:1px}
+  .reflection-text{font-size:14px;line-height:1.8;color:var(--text);font-style:italic}
+  .reflection-insights{margin-top:14px;padding-top:14px;border-top:1px solid var(--border);display:flex;flex-wrap:wrap;gap:8px}
+  .insight-tag{font-size:11px;padding:4px 10px;border-radius:99px;font-family:var(--mono);background:rgba(79,142,247,.12);color:var(--accent);border:1px solid rgba(79,142,247,.2)}
+
+  /* ── Burnout ── */
+  .burnout-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:20px}
+  .burnout-bar-wrap{position:relative;height:20px;background:var(--bg4);border-radius:99px;overflow:hidden;margin:14px 0}
+  .burnout-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--accent3),var(--accent4),var(--accent5));transition:width 1s ease}
+  .burnout-markers{display:flex;justify-content:space-between;font-size:10px;font-family:var(--mono);color:var(--text3)}
+
+  /* ── Input ── */
+  .input-section{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:24px;margin-bottom:20px}
+  .input-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .input-group{display:flex;flex-direction:column;gap:6px}
+  .input-label{font-size:11px;font-family:var(--mono);color:var(--text3);letter-spacing:.8px;text-transform:uppercase}
+  .input-slider{width:100%;accent-color:var(--accent);cursor:pointer;height:4px}
+  .input-val{font-size:14px;font-weight:500;font-family:var(--mono);text-align:center;padding:5px;background:var(--bg3);border-radius:var(--r);border:1px solid var(--border2)}
+
+  /* ── Buttons ── */
+  .btn-primary{
+    background:linear-gradient(135deg,var(--accent),var(--accent2));
+    border:none;color:#fff;padding:11px 24px;border-radius:var(--r);
+    font-family:var(--font);font-size:14px;font-weight:500;cursor:pointer;
+    transition:all .2s;margin-top:16px;
+  }
+  .btn-primary:hover{opacity:.88;transform:translateY(-1px)}
+  .btn-primary:disabled{opacity:.4;cursor:not-allowed;transform:none}
+
+  /* ── Tabs ── */
+  .tab-row{display:flex;gap:4px;padding:4px;background:var(--bg3);border-radius:var(--r);margin-bottom:20px;width:fit-content}
+  .tab-btn{padding:7px 16px;border-radius:8px;font-size:13px;cursor:pointer;border:none;background:transparent;color:var(--text2);font-family:var(--font);transition:all .2s}
+  .tab-btn.active{background:var(--bg2);color:var(--text);border:1px solid var(--border2)}
+
+  /* ── AI Output ── */
+  .ai-loading{display:flex;align-items:center;gap:10px;padding:16px;background:var(--bg3);border-radius:var(--r);margin-top:12px}
+  .ai-spinner{width:16px;height:16px;border:2px solid var(--border2);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite;flex-shrink:0}
+  .ai-loading-text{font-size:12px;color:var(--text2);font-family:var(--mono)}
+  .ai-output{background:var(--bg3);border:1px solid rgba(79,142,247,.25);border-radius:var(--r2);padding:20px;margin-top:16px}
+  .ai-output-header{display:flex;align-items:center;gap:8px;margin-bottom:12px;font-size:11px;font-family:var(--mono);color:var(--accent);letter-spacing:1px}
+  .ai-output-text{font-size:13.5px;line-height:1.8;color:var(--text);white-space:pre-wrap}
+
+  /* ── Misc ── */
+  .status-row{display:flex;align-items:center;gap:8px;margin-bottom:20px}
+  .status-dot{width:6px;height:6px;border-radius:50%;background:var(--accent3);animation:pulse 2s infinite}
+  .status-text{font-size:12px;font-family:var(--mono);color:var(--text3);letter-spacing:.5px}
+  .section-title{font-size:13px;font-weight:500;color:var(--text2);font-family:var(--mono);letter-spacing:1px;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+  .section-title::after{content:'';flex:1;height:1px;background:var(--border)}
+
+  /* ── Animations ── */
+  @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(1.3)}}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ── Scrollbar ── */
+  ::-webkit-scrollbar{width:5px}
+  ::-webkit-scrollbar-track{background:transparent}
+  ::-webkit-scrollbar-thumb{background:var(--bg4);border-radius:3px}
+
+  /* ── Responsive ── */
+  @media(max-width:860px){
+    #sidebar{width:180px}
+    .grid-4{grid-template-columns:repeat(2,1fr)}
+    .input-grid{grid-template-columns:repeat(2,1fr)}
+    .factors-grid{grid-template-columns:repeat(2,1fr)}
+  }
+  @media(max-width:640px){
+    #sidebar{display:none}
+    .grid-4,.grid-3,.grid-2{grid-template-columns:1fr 1fr}
+    .csi-section{flex-direction:column;align-items:flex-start}
+    .input-grid{grid-template-columns:1fr}
+  }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ═══════════════════════════════ SIDEBAR ═══════════════════════════════ -->
+  <nav id="sidebar">
+    <div class="brand">
+      <div class="brand-name">NEURA</div>
+      <div class="brand-sub">BEHAVIORAL OS v2.1</div>
+    </div>
+    <div class="nav">
+      <div class="nav-item active" data-page="dashboard">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="7" height="7" rx="1"></rect><rect x="14" y="3" width="7" height="7" rx="1"></rect><rect x="3" y="14" width="7" height="7" rx="1"></rect><rect x="14" y="14" width="7" height="7" rx="1"></rect></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-page="patterns">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 3v18h18"></path><path d="M7 16l4-4 4 4 4-8"></path></svg>
+        Patterns
+      </div>
+      <div class="nav-item" data-page="interventions">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"></path></svg>
+        Interventions
+      </div>
+      <div class="nav-item" data-page="reflection">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        AI Reflection
+      </div>
+      <div class="nav-item" data-page="burnout">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"></circle><path d="M12 6v6l4 2"></path></svg>
+        Burnout Risk
+      </div>
+      <div class="nav-item" data-page="input">
+        <svg class="nav-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path></svg>
+        Log Data
+      </div>
+    </div>
+    <div class="sidebar-footer">
+      <div class="csi-mini">
+        <div class="csi-mini-label">CSI SCORE</div>
+        <div class="csi-mini-score" id="csi-mini-val">74</div>
+        <div class="csi-mini-sub">cognitive stability</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════ MAIN ═══════════════════════════════ -->
+  <main id="main">
+
+    <!-- ─────────── DASHBOARD ─────────── -->
+    <div class="page active" id="page-dashboard">
+      <div class="page-header">
+        <div class="status-row">
+          <div class="status-dot"></div>
+          <div class="status-text">SYSTEM ACTIVE — MONITORING BEHAVIORAL SIGNALS</div>
+        </div>
+        <div class="page-title">Mental Operating System</div>
+        <div class="page-subtitle">Real-time cognitive intelligence for behavioral optimization</div>
+      </div>
+
+      <div class="csi-section">
+        <div class="csi-ring-wrap">
+          <svg width="160" height="160" viewBox="0 0 160 160">
+            <circle cx="80" cy="80" r="68" fill="none" stroke="#1e2535" stroke-width="10"></circle>
+            <circle id="csi-ring" cx="80" cy="80" r="68" fill="none" stroke="url(#csiGrad)" stroke-width="10" stroke-linecap="round" stroke-dasharray="427" stroke-dashoffset="115" style="transition: stroke-dashoffset 1.2s; stroke-dasharray: 427.257; stroke-dashoffset: 111.087;"></circle>
+            <defs>
+              <lineargradient id="csiGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stop-color="#4f8ef7"></stop>
+                <stop offset="100%" stop-color="#3ecf8e"></stop>
+              </lineargradient>
+            </defs>
+          </svg>
+          <div class="csi-ring-center">
+            <div class="csi-score" id="csi-val">74</div>
+            <div class="csi-label">CSI</div>
+          </div>
+        </div>
+        <div class="csi-info">
+          <div class="csi-title">Cognitive Stability Index</div>
+          <div class="csi-desc" id="csi-desc">Your cognitive stability is in the <strong style="color:var(--accent4)">moderate-high range</strong>. Sleep consistency is your primary stabilizer, while screen time fragmentation is introducing friction. Recovery quality has improved 12% over the past week.</div>
+          <div class="factors-grid" id="factors-grid">
+    <div class="factor-item">
+      <div class="factor-name">SLEEP CONSIST.</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:78%;background:#3ecf8e"></div></div>
+      <div class="factor-val" style="color:#3ecf8e">78%</div>
+    </div>
+    <div class="factor-item">
+      <div class="factor-name">STIMULATION</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:52%;background:#f75f5f"></div></div>
+      <div class="factor-val" style="color:#f75f5f">52%</div>
+    </div>
+    <div class="factor-item">
+      <div class="factor-name">PRODUCTIVITY</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:71%;background:#4f8ef7"></div></div>
+      <div class="factor-val" style="color:#4f8ef7">71%</div>
+    </div>
+    <div class="factor-item">
+      <div class="factor-name">RECOVERY</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:65%;background:#7b5ea7"></div></div>
+      <div class="factor-val" style="color:#7b5ea7">65%</div>
+    </div>
+    <div class="factor-item">
+      <div class="factor-name">EMOTION CONS.</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:69%;background:#f7a94f"></div></div>
+      <div class="factor-val" style="color:#f7a94f">69%</div>
+    </div>
+    <div class="factor-item">
+      <div class="factor-name">FOCUS INTEG.</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:48%;background:#f75f5f"></div></div>
+      <div class="factor-val" style="color:#f75f5f">48%</div>
+    </div></div>
+        </div>
+      </div>
+
+      <div class="grid-4" id="stat-cards">
+    <div class="card">
+      <div class="card-label">SCREEN TIME</div>
+      <div class="card-value" style="color:var(--accent4)">6.2h</div>
+      <div class="card-desc">↑ 0.8h from avg</div>
+    </div>
+    <div class="card">
+      <div class="card-label">SLEEP SCORE</div>
+      <div class="card-value" style="color:var(--accent3)">6.5h</div>
+      <div class="card-desc">Consistency: 78%</div>
+    </div>
+    <div class="card">
+      <div class="card-label">FOCUS BLOCKS</div>
+      <div class="card-value" style="color:var(--accent)">3</div>
+      <div class="card-desc">3.1h deep focus</div>
+    </div>
+    <div class="card">
+      <div class="card-label">APP SWITCHES</div>
+      <div class="card-value" style="color:var(--accent5)">47</div>
+      <div class="card-desc">↑ 22% from baseline</div>
+    </div></div>
+
+      <div class="section-title">DETECTED PATTERNS</div>
+      <div class="pattern-row" id="pattern-chips">
+    <div class="pattern-chip chip-danger">
+      <div class="chip-dot" style="background:#f75f5f"></div>
+      Late-night scrolling detected
+    </div>
+    <div class="pattern-chip chip-danger">
+      <div class="chip-dot" style="background:#f75f5f"></div>
+      Sleep onset delayed 2h
+    </div>
+    <div class="pattern-chip chip-warning">
+      <div class="chip-dot" style="background:#f7a94f"></div>
+      Rapid app switching ×47
+    </div>
+    <div class="pattern-chip chip-ok">
+      <div class="chip-dot" style="background:#3ecf8e"></div>
+      Productive focus block 3h
+    </div>
+    <div class="pattern-chip chip-warning">
+      <div class="chip-dot" style="background:#f7a94f"></div>
+      Social media &gt;90min
+    </div>
+    <div class="pattern-chip chip-ok">
+      <div class="chip-dot" style="background:#3ecf8e"></div>
+      Recovery window achieved
+    </div>
+    <div class="pattern-chip chip-info">
+      <div class="chip-dot" style="background:#4f8ef7"></div>
+      Cognitive switching elevated
+    </div></div>
+
+      <div class="card" style="margin-bottom:20px">
+        <div class="section-title">7-DAY COGNITIVE STABILITY TREND</div>
+        <div class="chart-wrap">
+          <canvas id="trendChart" role="img" aria-label="7-day CSI trend line chart" width="736" height="220" style="display: block; box-sizing: border-box; height: 220px; width: 736px;">Weekly cognitive stability trend over 7 days.</canvas>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title">24H STIMULATION MAP</div>
+        <div class="heatmap-grid" id="heatmap"><div class="heatmap-cell" style="background:rgba(247,95,95,0.90)" title="0:00 — Stimulation: 90%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.90)" title="1:00 — Stimulation: 90%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.90)" title="2:00 — Stimulation: 90%"></div><div class="heatmap-cell" style="background:rgba(62,207,142,0.24)" title="3:00 — Stimulation: 30%"></div><div class="heatmap-cell" style="background:rgba(62,207,142,0.24)" title="4:00 — Stimulation: 30%"></div><div class="heatmap-cell" style="background:rgba(62,207,142,0.24)" title="5:00 — Stimulation: 30%"></div><div class="heatmap-cell" style="background:rgba(79,142,247,0.50)" title="6:00 — Stimulation: 50%"></div><div class="heatmap-cell" style="background:rgba(79,142,247,0.50)" title="7:00 — Stimulation: 50%"></div><div class="heatmap-cell" style="background:rgba(79,142,247,0.50)" title="8:00 — Stimulation: 50%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.86)" title="9:00 — Stimulation: 86%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.81)" title="10:00 — Stimulation: 81%"></div><div class="heatmap-cell" style="background:rgba(247,169,79,0.63)" title="11:00 — Stimulation: 63%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.89)" title="12:00 — Stimulation: 89%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.89)" title="13:00 — Stimulation: 89%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.87)" title="14:00 — Stimulation: 87%"></div><div class="heatmap-cell" style="background:rgba(247,169,79,0.65)" title="15:00 — Stimulation: 65%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.78)" title="16:00 — Stimulation: 78%"></div><div class="heatmap-cell" style="background:rgba(247,169,79,0.60)" title="17:00 — Stimulation: 60%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.83)" title="18:00 — Stimulation: 83%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.86)" title="19:00 — Stimulation: 86%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.82)" title="20:00 — Stimulation: 82%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.80)" title="21:00 — Stimulation: 80%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.90)" title="22:00 — Stimulation: 90%"></div><div class="heatmap-cell" style="background:rgba(247,95,95,0.90)" title="23:00 — Stimulation: 90%"></div></div>
+        <div class="heatmap-labels"><span>12AM</span><span>6AM</span><span>12PM</span><span>6PM</span><span>11PM</span></div>
+      </div>
+    </div>
+
+    <!-- ─────────── PATTERNS ─────────── -->
+    <div class="page" id="page-patterns">
+      <div class="page-header">
+        <div class="page-title">Behavioral Pattern Analysis</div>
+        <div class="page-subtitle">Deep intelligence on your cognitive behavioral signatures</div>
+      </div>
+
+      <div class="tab-row">
+        <button class="tab-btn active" data-tab="overview">Overview</button>
+        <button class="tab-btn" data-tab="digital">Digital Load</button>
+        <button class="tab-btn" data-tab="circadian">Circadian</button>
+      </div>
+
+      <div id="tab-overview">
+        <div class="grid-2">
+          <div class="card">
+            <div class="section-title">SCREEN TIME FRAGMENTATION</div>
+            <div class="chart-wrap" style="height:180px">
+              <canvas id="fragChart" role="img" aria-label="Screen time fragmentation bar chart">Fragmentation by day of week.</canvas>
+            </div>
+          </div>
+          <div class="card">
+            <div class="section-title">SLEEP CONSISTENCY SCORE</div>
+            <div class="chart-wrap" style="height:180px">
+              <canvas id="sleepChart" role="img" aria-label="Sleep consistency radar chart">Sleep consistency radar.</canvas>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="section-title">BEHAVIORAL CAUSATION MAP</div>
+          <div id="causation-map" style="padding:10px 0"></div>
+        </div>
+      </div>
+
+      <div id="tab-digital" style="display:none">
+        <div class="card" style="margin-bottom:16px">
+          <div class="section-title">APP SWITCHING VELOCITY</div>
+          <div class="chart-wrap">
+            <canvas id="switchChart" role="img" aria-label="App switching velocity over time">App switches per hour throughout the day.</canvas>
+          </div>
+        </div>
+        <div class="grid-3">
+          <div class="card" id="d-card1"></div>
+          <div class="card" id="d-card2"></div>
+          <div class="card" id="d-card3"></div>
+        </div>
+      </div>
+
+      <div id="tab-circadian" style="display:none">
+        <div class="card">
+          <div class="section-title">CIRCADIAN ACTIVITY PROFILE</div>
+          <div class="chart-wrap" style="height:280px">
+            <canvas id="circChart" role="img" aria-label="Circadian activity polar area chart">Activity distribution across 24-hour periods.</canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ─────────── INTERVENTIONS ─────────── -->
+    <div class="page" id="page-interventions">
+      <div class="page-header">
+        <div class="page-title">Intervention Engine</div>
+        <div class="page-subtitle">AI-triggered environmental interventions based on detected behavioral patterns</div>
+      </div>
+      <div id="active-intervention" style="margin-bottom:24px">
+      <div style="background:linear-gradient(135deg,rgba(62,207,142,0.08),rgba(79,142,247,0.08));border:1px solid rgba(62,207,142,0.3);border-radius:18px;padding:20px;display:flex;gap:16px;align-items:center">
+        <div style="font-size:32px">🧘</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-family:var(--mono);color:var(--accent3);letter-spacing:1px;margin-bottom:4px">◉ ACTIVE INTERVENTION</div>
+          <div style="font-size:16px;font-weight:500;margin-bottom:4px">Recovery Mode</div>
+          <div style="font-size:13px;color:var(--text2)">Reduces UI stimulation, enables ambient audio, limits notifications for 45 minutes.</div>
+        </div>
+        <div style="width:56px;height:56px;border-radius:50%;border:2px solid var(--accent3);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);color:var(--accent3);text-align:center;line-height:1.3;flex-shrink:0">42<br>MIN</div>
+      </div></div>
+      <div class="section-title">AVAILABLE PROTOCOLS</div>
+      <div id="interventions-list">
+    <div class="intervention-card">
+      <div class="int-icon" style="background:rgba(62,207,142,0.12)">🧘</div>
+      <div style="flex:1">
+        <div class="int-title">Recovery Mode</div>
+        <div class="int-desc">Reduces UI stimulation, enables ambient audio, limits notifications for 45 minutes.</div>
+        <div class="int-badge" style="background:rgba(62,207,142,0.15);color:#3ecf8e">RECOMMENDED</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#3ecf8e;opacity:.7"></div>
+      </div>
+    </div>
+    <div class="intervention-card">
+      <div class="int-icon" style="background:rgba(79,142,247,0.12)">🎯</div>
+      <div style="flex:1">
+        <div class="int-title">Deep Focus Session</div>
+        <div class="int-desc">Blocks social feeds, enables focus timer, schedules micro-breaks every 25 minutes.</div>
+        <div class="int-badge" style="background:rgba(79,142,247,0.15);color:#4f8ef7">AVAILABLE</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#4f8ef7;opacity:.7"></div>
+      </div>
+    </div>
+    <div class="intervention-card">
+      <div class="int-icon" style="background:rgba(123,94,167,0.12)">🌙</div>
+      <div style="flex:1">
+        <div class="int-title">Sleep Reset Protocol</div>
+        <div class="int-desc">Enables night mode 2h before target sleep, sends wind-down reminders, reduces blue light exposure.</div>
+        <div class="int-badge" style="background:rgba(123,94,167,0.15);color:#7b5ea7">SCHEDULED</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#7b5ea7;opacity:.7"></div>
+      </div>
+    </div>
+    <div class="intervention-card">
+      <div class="int-icon" style="background:rgba(247,169,79,0.12)">🔕</div>
+      <div style="flex:1">
+        <div class="int-title">Notification Detox</div>
+        <div class="int-desc">Gradually reduces notification frequency by 80% for 3 hours. Batches non-urgent alerts.</div>
+        <div class="int-badge" style="background:rgba(247,169,79,0.15);color:#f7a94f">AVAILABLE</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#f7a94f;opacity:.7"></div>
+      </div>
+    </div>
+    <div class="intervention-card">
+      <div class="int-icon" style="background:rgba(62,207,142,0.12)">🏃</div>
+      <div style="flex:1">
+        <div class="int-title">Movement Break Trigger</div>
+        <div class="int-desc">40-min inactivity detected. Initiates 5-minute movement reminder with low-stimulation activity suggestions.</div>
+        <div class="int-badge" style="background:rgba(247,95,95,0.15);color:#f75f5f">TRIGGERED</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:#f75f5f;opacity:.7"></div>
+      </div>
+    </div></div>
+      <div class="section-title" style="margin-top:24px">AI INTERVENTION PLAN</div>
+      <button class="btn-primary" id="gen-intervention-btn" onclick="generateIntervention()">Generate Personalized Intervention Plan ↗</button>
+      <div id="intervention-output"></div>
+    </div>
+
+    <!-- ─────────── REFLECTION ─────────── -->
+    <div class="page" id="page-reflection">
+      <div class="page-header">
+        <div class="page-title">AI Reflection Engine</div>
+        <div class="page-subtitle">Psychologically intelligent weekly summaries powered by behavioral analysis</div>
+      </div>
+      <div class="reflection-card" id="latest-reflection">
+    <div class="reflection-header">
+      <div class="reflection-dot"></div>
+      <div style="font-size:14px;font-weight:500">THIS WEEK'S BEHAVIORAL PROFILE</div>
+      <div class="reflection-date" style="margin-left:auto">MAY 16 – MAY 22, 2026</div>
+    </div>
+    <div class="reflection-text">Your highest cognitive strain occurred between 10PM–1AM, primarily driven by passive social media consumption. This pattern correlates with a 23% reduction in next-day focus integrity. Interestingly, your 3-hour deep work sessions on Tuesday and Thursday acted as strong stabilizers — your Cognitive Stability Index peaked at 78 on those days.</div>
+    <div class="reflection-insights">
+      <span class="insight-tag">LATE-NIGHT TRIGGER</span>
+      <span class="insight-tag">FOCUS STABILIZER</span>
+      <span class="insight-tag">SLEEP DEBT: +1.2H</span>
+      <span class="insight-tag">RECOVERY: PARTIAL</span>
+    </div></div>
+      <div class="reflection-card" id="prev-reflection" style="opacity:.7">
+    <div class="reflection-header">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:500;color:var(--text2)">PREVIOUS WEEK</div>
+      <div class="reflection-date" style="margin-left:auto">MAY 9 – MAY 15, 2026</div>
+    </div>
+    <div class="reflection-text" style="color:var(--text2)">Social interaction patterns positively impacted emotional consistency, raising your baseline stability by 14%. Recovery quality improved after implementing the Sleep Reset Protocol on Days 3–5. Doomscrolling episodes were reduced by 31% compared to the prior week.</div>
+    <div class="reflection-insights">
+      <span class="insight-tag" style="opacity:.6">SOCIAL BOOST</span>
+      <span class="insight-tag" style="opacity:.6">SLEEP PROTOCOL</span>
+      <span class="insight-tag" style="opacity:.6">SCROLL: ↓31%</span>
+    </div></div>
+      <div class="section-title" style="margin-top:8px">GENERATE DEEP REFLECTION</div>
+      <button class="btn-primary" id="gen-reflect-btn" onclick="generateReflection()">Generate This Week's Behavioral Reflection ↗</button>
+      <div id="reflection-output"></div>
+    </div>
+
+    <!-- ─────────── BURNOUT ─────────── -->
+    <div class="page" id="page-burnout">
+      <div class="page-header">
+        <div class="page-title">Burnout Prediction System</div>
+        <div class="page-subtitle">Predictive risk modeling using multi-dimensional behavioral signals</div>
+      </div>
+
+      <div class="burnout-section">
+        <div class="section-title">CURRENT BURNOUT RISK INDEX</div>
+        <div class="burnout-bar-wrap">
+          <div class="burnout-bar-fill" id="burnout-fill" style="width:42%"></div>
+        </div>
+        <div class="burnout-markers">
+          <span>RECOVERY (0)</span><span>OPTIMAL (25)</span><span>CAUTION (50)</span><span>HIGH RISK (75)</span><span>CRITICAL (100)</span>
+        </div>
+        <div id="burnout-status" style="margin-top:16px;padding:14px;background:var(--bg3);border-radius:var(--r);border-left:3px solid var(--accent4)">
+          <div style="font-size:13px;font-weight:500;color:var(--accent4);margin-bottom:4px">MODERATE RISK — 42%</div>
+          <div style="font-size:12px;color:var(--text2);line-height:1.6">Key drivers: late-night screen activity (+18%), reduced recovery windows (−11%), elevated cognitive switching (+22%). Sleep deficit accumulation detected over 5 days.</div>
+        </div>
+      </div>
+
+      <div class="grid-3" id="burnout-factors"></div>
+
+      <div class="section-title">PREDICTIVE TRAJECTORY</div>
+      <div class="card" style="margin-bottom:20px">
+        <div class="chart-wrap">
+          <canvas id="burnoutChart" role="img" aria-label="Burnout risk trajectory prediction chart">Predicted burnout risk over 14 days.</canvas>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="generateBurnoutAnalysis()">Run Deep Burnout Analysis ↗</button>
+      <div id="burnout-output"></div>
+    </div>
+
+    <!-- ─────────── LOG DATA ─────────── -->
+    <div class="page" id="page-input">
+      <div class="page-header">
+        <div class="page-title">Behavioral Data Logger</div>
+        <div class="page-subtitle">Input today's behavioral metrics to update your cognitive profile</div>
+      </div>
+      <div class="input-section">
+        <div class="section-title">DAILY BEHAVIORAL METRICS</div>
+        <div class="input-grid" id="input-grid">
+    <div class="input-group">
+      <div class="input-label">SCREEN TIME (HOURS)</div>
+      <input type="range" class="input-slider" id="slider-screenTime" min="0" max="16" step="0.5" value="6">
+      <div class="input-val" id="val-screenTime">6h</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">SLEEP DURATION (HRS)</div>
+      <input type="range" class="input-slider" id="slider-sleepHours" min="0" max="12" step="0.5" value="6.5">
+      <div class="input-val" id="val-sleepHours">6.5h</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">SLEEP QUALITY (1-10)</div>
+      <input type="range" class="input-slider" id="slider-sleepQuality" min="1" max="10" step="1" value="7">
+      <div class="input-val" id="val-sleepQuality">7</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">FOCUS BLOCKS COUNT</div>
+      <input type="range" class="input-slider" id="slider-focusBlocks" min="0" max="10" step="1" value="3">
+      <div class="input-val" id="val-focusBlocks">3</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">SOCIAL MEDIA (MIN)</div>
+      <input type="range" class="input-slider" id="slider-socialMediaMin" min="0" max="300" step="5" value="95">
+      <div class="input-val" id="val-socialMediaMin">95min</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">APP SWITCHES (EST.)</div>
+      <input type="range" class="input-slider" id="slider-appSwitches" min="0" max="150" step="1" value="47">
+      <div class="input-val" id="val-appSwitches">47</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">MOOD SCORE (1-10)</div>
+      <input type="range" class="input-slider" id="slider-moodScore" min="1" max="10" step="1" value="6">
+      <div class="input-val" id="val-moodScore">6</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">STRESS LEVEL (1-10)</div>
+      <input type="range" class="input-slider" id="slider-stressLevel" min="1" max="10" step="1" value="5">
+      <div class="input-val" id="val-stressLevel">5</div>
+    </div>
+    <div class="input-group">
+      <div class="input-label">EXERCISE (MINUTES)</div>
+      <input type="range" class="input-slider" id="slider-exerciseMin" min="0" max="180" step="5" value="20">
+      <div class="input-val" id="val-exerciseMin">20min</div>
+    </div></div>
+        <button class="btn-primary" onclick="processInputData()">Analyze &amp; Update Profile ↗</button>
+        <div id="analysis-output"></div>
+      </div>
+      <div class="card" style="margin-top:16px">
+        <div class="section-title">RECENT SUBMISSIONS</div>
+        <div id="input-history"><div style="font-size:12px;color:var(--text3);text-align:center;padding:20px">No submissions yet. Log your first behavioral entry above.</div></div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- ═══════════════════════════════ CHART.JS ═══════════════════════════════ -->
+<script src="./neura_files/chart.umd.js.download"></script>
+
+<script>
+// ╔═══════════════════════════════════════════╗
+// ║              NEURA — CORE STATE           ║
+// ╚═══════════════════════════════════════════╝
+
+const state = {
+  csi: 74,
+  burnoutRisk: 42,
+  history: (() => { try { return JSON.parse(localStorage.getItem('neura_history') || '[]'); } catch(e){ return []; } })(),
+  factors: {
+    sleepConsistency: 78,
+    stimulationExposure: 52,
+    productivityBalance: 71,
+    recoveryQuality: 65,
+    emotionalConsistency: 69,
+    focusFragmentation: 48
+  },
+  patterns: [
+    { label:'Late-night scrolling detected', type:'danger' },
+    { label:'Sleep onset delayed 2h', type:'danger' },
+    { label:'Rapid app switching ×47', type:'warning' },
+    { label:'Productive focus block 3h', type:'ok' },
+    { label:'Social media >90min', type:'warning' },
+    { label:'Recovery window achieved', type:'ok' },
+    { label:'Cognitive switching elevated', type:'info' },
+  ],
+  weeklyCSI: [68, 71, 65, 72, 69, 78, 74],
+  inputValues: {
+    screenTime: 6,
+    sleepHours: 6.5,
+    sleepQuality: 7,
+    focusBlocks: 3,
+    socialMediaMin: 95,
+    appSwitches: 47,
+    moodScore: 6,
+    stressLevel: 5,
+    exerciseMin: 20
+  }
+};
+
+// ╔═══════════════════════════════════════════╗
+// ║              NAVIGATION                  ║
+// ╚═══════════════════════════════════════════╝
+
+document.querySelectorAll('.nav-item').forEach(item => {
+  item.addEventListener('click', () => {
+    const page = item.dataset.page;
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page-' + page).classList.add('active');
+    if (page === 'patterns') initPatternCharts('overview');
+    if (page === 'burnout') initBurnoutChart();
+  });
+});
+
+document.querySelectorAll('.tab-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ['overview', 'digital', 'circadian'].forEach(t => {
+      const el = document.getElementById('tab-' + t);
+      if (el) el.style.display = t === btn.dataset.tab ? 'block' : 'none';
+    });
+    setTimeout(() => initPatternCharts(btn.dataset.tab), 50);
+  });
+});
+
+// ╔═══════════════════════════════════════════╗
+// ║            DASHBOARD INIT                ║
+// ╚═══════════════════════════════════════════╝
+
+function initDashboard() {
+  // CSI Ring
+  const circ = 2 * Math.PI * 68;
+  const offset = circ - (state.csi / 100) * circ;
+  const ring = document.getElementById('csi-ring');
+  ring.style.strokeDasharray = circ;
+  ring.style.strokeDashoffset = offset;
+  document.getElementById('csi-val').textContent = state.csi;
+  document.getElementById('csi-mini-val').textContent = state.csi;
+
+  // Factor bars
+  const factorNames = {
+    sleepConsistency:'SLEEP CONSIST.', stimulationExposure:'STIMULATION',
+    productivityBalance:'PRODUCTIVITY', recoveryQuality:'RECOVERY',
+    emotionalConsistency:'EMOTION CONS.', focusFragmentation:'FOCUS INTEG.'
+  };
+  const factorColors = {
+    sleepConsistency:'#3ecf8e', stimulationExposure:'#f75f5f',
+    productivityBalance:'#4f8ef7', recoveryQuality:'#7b5ea7',
+    emotionalConsistency:'#f7a94f', focusFragmentation:'#f75f5f'
+  };
+  document.getElementById('factors-grid').innerHTML = Object.entries(state.factors).map(([k, v]) => `
+    <div class="factor-item">
+      <div class="factor-name">${factorNames[k]}</div>
+      <div class="factor-bar-bg"><div class="factor-bar" style="width:${v}%;background:${factorColors[k]}"></div></div>
+      <div class="factor-val" style="color:${factorColors[k]}">${v}%</div>
+    </div>`).join('');
+
+  // Stat cards
+  const stats = [
+    { label:'SCREEN TIME', value:'6.2h', desc:'↑ 0.8h from avg', color:'var(--accent4)' },
+    { label:'SLEEP SCORE', value:'6.5h', desc:'Consistency: 78%', color:'var(--accent3)' },
+    { label:'FOCUS BLOCKS', value:'3', desc:'3.1h deep focus', color:'var(--accent)' },
+    { label:'APP SWITCHES', value:'47', desc:'↑ 22% from baseline', color:'var(--accent5)' },
+  ];
+  document.getElementById('stat-cards').innerHTML = stats.map(s => `
+    <div class="card">
+      <div class="card-label">${s.label}</div>
+      <div class="card-value" style="color:${s.color}">${s.value}</div>
+      <div class="card-desc">${s.desc}</div>
+    </div>`).join('');
+
+  // Pattern chips
+  const chipMap = { danger:'chip-danger', warning:'chip-warning', ok:'chip-ok', info:'chip-info' };
+  const dotColor = { danger:'#f75f5f', warning:'#f7a94f', ok:'#3ecf8e', info:'#4f8ef7' };
+  document.getElementById('pattern-chips').innerHTML = state.patterns.map(p => `
+    <div class="pattern-chip ${chipMap[p.type]}">
+      <div class="chip-dot" style="background:${dotColor[p.type]}"></div>
+      ${p.label}
+    </div>`).join('');
+
+  // Weekly trend chart
+  const trendCtx = document.getElementById('trendChart');
+  if (trendCtx && !trendCtx._chart) {
+    trendCtx._chart = new Chart(trendCtx, {
+      type: 'line',
+      data: {
+        labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+        datasets: [{
+          label: 'CSI',
+          data: state.weeklyCSI,
+          borderColor: '#4f8ef7', backgroundColor: 'rgba(79,142,247,0.08)',
+          borderWidth: 2, tension: .4, fill: true, pointBackgroundColor: '#4f8ef7',
+          pointRadius: 4, pointHoverRadius: 6,
+        }, {
+          label: 'Baseline',
+          data: Array(7).fill(70),
+          borderColor: 'rgba(255,255,255,0.15)', borderDash: [5, 5],
+          borderWidth: 1, tension: 0, fill: false, pointRadius: 0,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor:'#1e2535', titleColor:'#e8eaf0', bodyColor:'#9ba3b5', borderColor:'#ffffff12', borderWidth:1 } },
+        scales: {
+          x: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#5c657a', font:{ size:11 } } },
+          y: { grid: { color:'rgba(255,255,255,0.04)' }, ticks: { color:'#5c657a', font:{ size:11 } }, min: 50, max: 100 }
+        }
+      }
+    });
+  }
+
+  // Stimulation heatmap
+  const hm = document.getElementById('heatmap');
+  const hmData = Array.from({ length: 24 }, (_, i) => {
+    if (i >= 22 || i <= 2) return 0.9;
+    if (i >= 3 && i <= 5) return 0.3;
+    if (i >= 6 && i <= 8) return 0.5;
+    if (i >= 9 && i <= 17) return 0.6 + Math.random() * 0.3;
+    if (i >= 18 && i <= 21) return 0.7 + Math.random() * 0.2;
+    return 0.4;
+  });
+  hm.innerHTML = hmData.map((v, i) => {
+    const intensity = Math.round(v * 100);
+    const bg = v > 0.75 ? `rgba(247,95,95,${v.toFixed(2)})` :
+               v > 0.55 ? `rgba(247,169,79,${v.toFixed(2)})` :
+               v > 0.35 ? `rgba(79,142,247,${v.toFixed(2)})` :
+               v > 0.2  ? `rgba(62,207,142,${(v * 0.8).toFixed(2)})` : 'rgba(30,37,53,0.8)';
+    return `<div class="heatmap-cell" style="background:${bg}" title="${i}:00 — Stimulation: ${intensity}%"></div>`;
+  }).join('');
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           PATTERN CHARTS                 ║
+// ╚═══════════════════════════════════════════╝
+
+let patternChartsInit = false;
+
+function initPatternCharts(tab = 'overview') {
+  if (tab === 'overview' || !patternChartsInit) {
+    const fc = document.getElementById('fragChart');
+    if (fc && !fc._chart) {
+      fc._chart = new Chart(fc, {
+        type: 'bar',
+        data: {
+          labels: ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'],
+          datasets: [{ label:'Switches', data:[32,47,28,55,41,38,47], backgroundColor:'rgba(247,169,79,0.6)', borderColor:'#f7a94f', borderWidth:1, borderRadius:4 }]
+        },
+        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+          scales: { x:{ ticks:{ color:'#5c657a', font:{ size:11 } }, grid:{ color:'rgba(255,255,255,0.04)' } }, y:{ ticks:{ color:'#5c657a', font:{ size:11 } }, grid:{ color:'rgba(255,255,255,0.04)' } } }
+        }
+      });
+    }
+    const sc = document.getElementById('sleepChart');
+    if (sc && !sc._chart) {
+      sc._chart = new Chart(sc, {
+        type: 'radar',
+        data: {
+          labels: ['Onset','Duration','Depth','Recovery','Consistency','Efficiency'],
+          datasets: [{
+            label: 'This week', data: [72,65,78,68,80,74],
+            borderColor: '#3ecf8e', backgroundColor: 'rgba(62,207,142,0.1)', borderWidth:2, pointBackgroundColor:'#3ecf8e',
+          }, {
+            label: 'Baseline', data: Array(6).fill(70),
+            borderColor: 'rgba(255,255,255,0.15)', backgroundColor:'transparent', borderWidth:1, borderDash:[3,3], pointRadius:0,
+          }]
+        },
+        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+          scales: { r: { grid:{ color:'rgba(255,255,255,0.08)' }, ticks:{ display:false }, pointLabels:{ color:'#5c657a', font:{ size:10 } }, angleLines:{ color:'rgba(255,255,255,0.08)' } } }
+        }
+      });
+    }
+    // Causation map
+    const cm = document.getElementById('causation-map');
+    if (cm && !cm._init) {
+      cm._init = true;
+      const nodes = [
+        { label:'Late-night scrolling', color:'#f75f5f' }, { arrow:true },
+        { label:'Delayed sleep onset', color:'#f7a94f' }, { arrow:true },
+        { label:'Sleep debt', color:'#f7a94f' }, { arrow:true },
+        { label:'Reduced recovery', color:'#7b5ea7' }, { arrow:true },
+        { label:'Cognitive fatigue', color:'#f75f5f' },
+      ];
+      cm.innerHTML = `
+        <div style="display:flex;gap:0;overflow-x:auto;padding:8px 0;align-items:center">
+          ${nodes.map(n => n.arrow
+            ? `<div style="font-size:18px;color:#5c657a;padding:0 4px;flex-shrink:0">→</div>`
+            : `<div style="background:rgba(30,37,53,0.8);border:1px solid ${n.color}33;border-radius:8px;padding:8px 12px;font-size:11px;font-family:'Space Mono',monospace;color:${n.color};flex-shrink:0;text-align:center">${n.label}</div>`
+          ).join('')}
+        </div>
+        <div style="margin-top:16px;display:flex;gap:12px;flex-wrap:wrap">
+          ${[
+            { label:'Productive focus blocks → Improved emotional stability (+14%)', color:'#3ecf8e' },
+            { label:'Social interaction → Emotional balance recovery (+9%)', color:'#3ecf8e' },
+            { label:'App switching velocity → Focus fragmentation (+22%)', color:'#f75f5f' },
+          ].map(i => `<div style="font-size:12px;padding:6px 12px;border-radius:99px;background:${i.color}11;border:1px solid ${i.color}33;color:${i.color}">${i.label}</div>`).join('')}
+        </div>`;
+    }
+    patternChartsInit = true;
+  }
+
+  if (tab === 'digital') {
+    const dc = document.getElementById('switchChart');
+    if (dc && !dc._chart) {
+      dc._chart = new Chart(dc, {
+        type: 'line',
+        data: {
+          labels: ['8AM','10AM','12PM','2PM','4PM','6PM','8PM','10PM','12AM'],
+          datasets: [{ label:'App Switches/h', data:[3,8,12,15,9,18,24,35,28], borderColor:'#f75f5f', backgroundColor:'rgba(247,95,95,0.08)', borderWidth:2, tension:.4, fill:true, pointRadius:3 }]
+        },
+        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+          scales: { x:{ ticks:{ color:'#5c657a', font:{ size:11 } }, grid:{ color:'rgba(255,255,255,0.04)' } }, y:{ ticks:{ color:'#5c657a', font:{ size:11 } }, grid:{ color:'rgba(255,255,255,0.04)' } } }
+        }
+      });
+    }
+    const digitalData = [
+      { label:'DOOMSCROLLING RISK', val:'HIGH', desc:'87 min continuous passive scroll detected', color:'#f75f5f' },
+      { label:'DIGITAL OVERLOAD INDEX', val:'73/100', desc:'Stimulation threshold exceeded 4× today', color:'#f7a94f' },
+      { label:'FOCUS INTEGRITY', val:'48%', desc:'Fragmented into 12 separate blocks', color:'#4f8ef7' },
+    ];
+    digitalData.forEach((d, i) => {
+      const el = document.getElementById('d-card' + (i + 1));
+      if (el && !el._init) {
+        el._init = true;
+        el.innerHTML = `<div class="card-label">${d.label}</div><div class="card-value" style="color:${d.color}">${d.val}</div><div class="card-desc">${d.desc}</div>`;
+      }
+    });
+  }
+
+  if (tab === 'circadian') {
+    const cc = document.getElementById('circChart');
+    if (cc && !cc._chart) {
+      cc._chart = new Chart(cc, {
+        type: 'polarArea',
+        data: {
+          labels: ['12-3AM','3-6AM','6-9AM','9-12PM','12-3PM','3-6PM','6-9PM','9-12AM'],
+          datasets: [{ data:[72,15,45,68,75,82,78,88], backgroundColor:['rgba(247,95,95,0.5)','rgba(92,101,122,0.3)','rgba(62,207,142,0.4)','rgba(79,142,247,0.5)','rgba(79,142,247,0.6)','rgba(79,142,247,0.65)','rgba(247,169,79,0.5)','rgba(247,95,95,0.65)'], borderWidth:0 }]
+        },
+        options: { responsive:true, maintainAspectRatio:false, plugins:{ legend:{ display:false } },
+          scales: { r: { grid:{ color:'rgba(255,255,255,0.08)' }, ticks:{ display:false }, pointLabels:{ color:'#5c657a', font:{ size:11 } } } }
+        }
+      });
+    }
+  }
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           INTERVENTIONS                  ║
+// ╚═══════════════════════════════════════════╝
+
+function initInterventions() {
+  const protocols = [
+    { icon:'🧘', bg:'rgba(62,207,142,0.12)', color:'#3ecf8e', title:'Recovery Mode', desc:'Reduces UI stimulation, enables ambient audio, limits notifications for 45 minutes.', badge:'RECOMMENDED', badgeBg:'rgba(62,207,142,0.15)', badgeColor:'#3ecf8e', active:true },
+    { icon:'🎯', bg:'rgba(79,142,247,0.12)', color:'#4f8ef7', title:'Deep Focus Session', desc:'Blocks social feeds, enables focus timer, schedules micro-breaks every 25 minutes.', badge:'AVAILABLE', badgeBg:'rgba(79,142,247,0.15)', badgeColor:'#4f8ef7' },
+    { icon:'🌙', bg:'rgba(123,94,167,0.12)', color:'#7b5ea7', title:'Sleep Reset Protocol', desc:'Enables night mode 2h before target sleep, sends wind-down reminders, reduces blue light exposure.', badge:'SCHEDULED', badgeBg:'rgba(123,94,167,0.15)', badgeColor:'#7b5ea7' },
+    { icon:'🔕', bg:'rgba(247,169,79,0.12)', color:'#f7a94f', title:'Notification Detox', desc:'Gradually reduces notification frequency by 80% for 3 hours. Batches non-urgent alerts.', badge:'AVAILABLE', badgeBg:'rgba(247,169,79,0.15)', badgeColor:'#f7a94f' },
+    { icon:'🏃', bg:'rgba(62,207,142,0.12)', color:'#3ecf8e', title:'Movement Break Trigger', desc:'40-min inactivity detected. Initiates 5-minute movement reminder with low-stimulation activity suggestions.', badge:'TRIGGERED', badgeBg:'rgba(247,95,95,0.15)', badgeColor:'#f75f5f' },
+  ];
+
+  const active = protocols.find(p => p.active);
+  if (active) {
+    document.getElementById('active-intervention').innerHTML = `
+      <div style="background:linear-gradient(135deg,rgba(62,207,142,0.08),rgba(79,142,247,0.08));border:1px solid rgba(62,207,142,0.3);border-radius:18px;padding:20px;display:flex;gap:16px;align-items:center">
+        <div style="font-size:32px">${active.icon}</div>
+        <div style="flex:1">
+          <div style="font-size:11px;font-family:var(--mono);color:var(--accent3);letter-spacing:1px;margin-bottom:4px">◉ ACTIVE INTERVENTION</div>
+          <div style="font-size:16px;font-weight:500;margin-bottom:4px">${active.title}</div>
+          <div style="font-size:13px;color:var(--text2)">${active.desc}</div>
+        </div>
+        <div style="width:56px;height:56px;border-radius:50%;border:2px solid var(--accent3);display:flex;align-items:center;justify-content:center;font-size:11px;font-family:var(--mono);color:var(--accent3);text-align:center;line-height:1.3;flex-shrink:0">42<br>MIN</div>
+      </div>`;
+  }
+
+  document.getElementById('interventions-list').innerHTML = protocols.map(p => `
+    <div class="intervention-card">
+      <div class="int-icon" style="background:${p.bg}">${p.icon}</div>
+      <div style="flex:1">
+        <div class="int-title">${p.title}</div>
+        <div class="int-desc">${p.desc}</div>
+        <div class="int-badge" style="background:${p.badgeBg};color:${p.badgeColor}">${p.badge}</div>
+      </div>
+      <div style="display:flex;align-items:center;padding-left:8px">
+        <div style="width:8px;height:8px;border-radius:50%;background:${p.badgeColor};opacity:.7"></div>
+      </div>
+    </div>`).join('');
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           REFLECTION INIT                ║
+// ╚═══════════════════════════════════════════╝
+
+function initReflection() {
+  document.getElementById('latest-reflection').innerHTML = `
+    <div class="reflection-header">
+      <div class="reflection-dot"></div>
+      <div style="font-size:14px;font-weight:500">THIS WEEK'S BEHAVIORAL PROFILE</div>
+      <div class="reflection-date" style="margin-left:auto">MAY 16 – MAY 22, 2026</div>
+    </div>
+    <div class="reflection-text">Your highest cognitive strain occurred between 10PM–1AM, primarily driven by passive social media consumption. This pattern correlates with a 23% reduction in next-day focus integrity. Interestingly, your 3-hour deep work sessions on Tuesday and Thursday acted as strong stabilizers — your Cognitive Stability Index peaked at 78 on those days.</div>
+    <div class="reflection-insights">
+      <span class="insight-tag">LATE-NIGHT TRIGGER</span>
+      <span class="insight-tag">FOCUS STABILIZER</span>
+      <span class="insight-tag">SLEEP DEBT: +1.2H</span>
+      <span class="insight-tag">RECOVERY: PARTIAL</span>
+    </div>`;
+
+  document.getElementById('prev-reflection').innerHTML = `
+    <div class="reflection-header">
+      <div style="width:8px;height:8px;border-radius:50%;background:var(--text3);flex-shrink:0"></div>
+      <div style="font-size:14px;font-weight:500;color:var(--text2)">PREVIOUS WEEK</div>
+      <div class="reflection-date" style="margin-left:auto">MAY 9 – MAY 15, 2026</div>
+    </div>
+    <div class="reflection-text" style="color:var(--text2)">Social interaction patterns positively impacted emotional consistency, raising your baseline stability by 14%. Recovery quality improved after implementing the Sleep Reset Protocol on Days 3–5. Doomscrolling episodes were reduced by 31% compared to the prior week.</div>
+    <div class="reflection-insights">
+      <span class="insight-tag" style="opacity:.6">SOCIAL BOOST</span>
+      <span class="insight-tag" style="opacity:.6">SLEEP PROTOCOL</span>
+      <span class="insight-tag" style="opacity:.6">SCROLL: ↓31%</span>
+    </div>`;
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           BURNOUT CHART                  ║
+// ╚═══════════════════════════════════════════╝
+
+function initBurnoutChart() {
+  const bc = document.getElementById('burnoutChart');
+  if (bc && !bc._chart) {
+    const days = Array.from({ length: 14 }, (_, i) => {
+      const d = new Date('2026-05-23');
+      d.setDate(d.getDate() + i);
+      return d.toLocaleDateString('en', { month:'short', day:'numeric' });
+    });
+    bc._chart = new Chart(bc, {
+      type: 'line',
+      data: {
+        labels: days,
+        datasets: [{
+          label: 'Predicted Risk %',
+          data: [42,45,48,52,49,55,60,57,53,58,62,65,61,58],
+          borderColor: '#f7a94f', backgroundColor: 'rgba(247,169,79,0.08)',
+          borderWidth: 2, tension: .4, fill: true, pointRadius: 3,
+        }, {
+          label: 'Critical Threshold',
+          data: Array(14).fill(75),
+          borderColor: 'rgba(247,95,95,0.4)', borderDash: [4, 4],
+          borderWidth: 1, fill: false, pointRadius: 0,
+        }]
+      },
+      options: {
+        responsive: true, maintainAspectRatio: false,
+        plugins: { legend: { display: false }, tooltip: { backgroundColor:'#1e2535', titleColor:'#e8eaf0', bodyColor:'#9ba3b5', borderColor:'#ffffff12', borderWidth:1 } },
+        scales: {
+          x: { ticks: { color:'#5c657a', font:{ size:10 }, maxRotation:45 }, grid: { color:'rgba(255,255,255,0.04)' } },
+          y: { ticks: { color:'#5c657a', font:{ size:11 }, stepSize:25 }, grid: { color:'rgba(255,255,255,0.04)' }, min:0, max:100 }
+        }
+      }
+    });
+  }
+
+  const bf = document.getElementById('burnout-factors');
+  if (bf && !bf._init) {
+    bf._init = true;
+    bf.innerHTML = [
+      { label:'SLEEP DEBT', val:'+1.2h', desc:'Accumulating over 5 days', color:'#f75f5f' },
+      { label:'OVERLOAD INDEX', val:'73/100', desc:'Stimulation threshold exceeded', color:'#f7a94f' },
+      { label:'RECOVERY DEFICIT', val:'−11%', desc:'Below optimal recovery target', color:'#7b5ea7' },
+    ].map(f => `<div class="card"><div class="card-label">${f.label}</div><div class="card-value" style="color:${f.color}">${f.val}</div><div class="card-desc">${f.desc}</div></div>`).join('');
+  }
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           INPUT PAGE                     ║
+// ╚═══════════════════════════════════════════╝
+
+function initInputPage() {
+  const metrics = [
+    { key:'screenTime',    label:'SCREEN TIME (HOURS)',   min:0,  max:16,  step:0.5, unit:'h' },
+    { key:'sleepHours',    label:'SLEEP DURATION (HRS)',  min:0,  max:12,  step:0.5, unit:'h' },
+    { key:'sleepQuality',  label:'SLEEP QUALITY (1-10)',  min:1,  max:10,  step:1,   unit:'' },
+    { key:'focusBlocks',   label:'FOCUS BLOCKS COUNT',   min:0,  max:10,  step:1,   unit:'' },
+    { key:'socialMediaMin',label:'SOCIAL MEDIA (MIN)',    min:0,  max:300, step:5,   unit:'min' },
+    { key:'appSwitches',   label:'APP SWITCHES (EST.)',   min:0,  max:150, step:1,   unit:'' },
+    { key:'moodScore',     label:'MOOD SCORE (1-10)',     min:1,  max:10,  step:1,   unit:'' },
+    { key:'stressLevel',   label:'STRESS LEVEL (1-10)',   min:1,  max:10,  step:1,   unit:'' },
+    { key:'exerciseMin',   label:'EXERCISE (MINUTES)',    min:0,  max:180, step:5,   unit:'min' },
+  ];
+
+  document.getElementById('input-grid').innerHTML = metrics.map(m => `
+    <div class="input-group">
+      <div class="input-label">${m.label}</div>
+      <input type="range" class="input-slider" id="slider-${m.key}"
+        min="${m.min}" max="${m.max}" step="${m.step}" value="${state.inputValues[m.key]}">
+      <div class="input-val" id="val-${m.key}">${state.inputValues[m.key]}${m.unit}</div>
+    </div>`).join('');
+
+  metrics.forEach(m => {
+    const slider = document.getElementById('slider-' + m.key);
+    const valEl = document.getElementById('val-' + m.key);
+    slider.addEventListener('input', () => {
+      state.inputValues[m.key] = parseFloat(slider.value);
+      valEl.textContent = slider.value + m.unit;
+    });
+  });
+
+  renderInputHistory();
+}
+
+function renderInputHistory() {
+  const el = document.getElementById('input-history');
+  if (!state.history.length) {
+    el.innerHTML = '<div style="font-size:12px;color:var(--text3);text-align:center;padding:20px">No submissions yet. Log your first behavioral entry above.</div>';
+    return;
+  }
+  el.innerHTML = state.history.slice(-5).reverse().map(h => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--border)">
+      <div>
+        <div style="font-size:12px;font-family:var(--mono);color:var(--text3)">${h.date}</div>
+        <div style="font-size:13px;margin-top:2px">Screen: ${h.screenTime}h · Sleep: ${h.sleepHours}h · Mood: ${h.moodScore}/10</div>
+      </div>
+      <div style="font-size:20px;font-weight:500;font-family:var(--mono);color:${h.csi > 70 ? '#3ecf8e' : h.csi > 50 ? '#f7a94f' : '#f75f5f'}">${h.csi}</div>
+    </div>`).join('');
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           CSI ALGORITHM                  ║
+// ╚═══════════════════════════════════════════╝
+
+function computeCSI(v) {
+  const sleepScore       = Math.min(v.sleepHours / 8, 1) * 50 + (v.sleepQuality / 10) * 50;
+  const focusScore       = Math.min(v.focusBlocks / 5, 1) * 100;
+  const screenPenalty    = Math.max(0, (v.screenTime - 4) * 8);
+  const socialPenalty    = Math.max(0, (v.socialMediaMin - 60) * 0.3);
+  const switchPenalty    = Math.max(0, (v.appSwitches - 30) * 0.5);
+  const moodBoost        = (v.moodScore / 10) * 20;
+  const exerciseBoost    = Math.min(v.exerciseMin / 60, 1) * 15;
+  const stressPenalty    = (v.stressLevel / 10) * 25;
+
+  const score = 40
+    + (sleepScore   * 0.25)
+    + (focusScore   * 0.20)
+    + moodBoost
+    + exerciseBoost
+    - (screenPenalty  * 0.30)
+    - (socialPenalty  * 0.20)
+    - (switchPenalty  * 0.20)
+    - (stressPenalty  * 0.15);
+
+  return Math.max(0, Math.min(100, Math.round(score)));
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║           AI CLAUDE CALLS                ║
+// ╚═══════════════════════════════════════════╝
+
+async function callClaude(systemPrompt, userPrompt, outputEl, loadingMsg = 'Analyzing behavioral patterns...') {
+  outputEl.innerHTML = `
+    <div class="ai-loading">
+      <div class="ai-spinner"></div>
+      <div class="ai-loading-text">${loadingMsg}</div>
+    </div>`;
+  try {
+    const resp = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: [{ role: 'user', content: userPrompt }]
+      })
+    });
+    const data = await resp.json();
+    const text = data.content?.map(b => b.text || '').join('\n').trim() || 'Analysis unavailable.';
+    outputEl.innerHTML = `
+      <div class="ai-output">
+        <div class="ai-output-header">
+          <div class="reflection-dot"></div>
+          NEURA AI ANALYSIS
+        </div>
+        <div class="ai-output-text">${text}</div>
+      </div>`;
+  } catch (e) {
+    outputEl.innerHTML = `<div class="ai-output"><div class="ai-output-text" style="color:var(--accent5)">Neural analysis temporarily offline. Ensure you are running this file via a local server with a valid Anthropic API key proxied (or update the fetch URL to your backend).</div></div>`;
+  }
+}
+
+function generateIntervention() {
+  const btn = document.getElementById('gen-intervention-btn');
+  btn.disabled = true;
+  const out = document.getElementById('intervention-output');
+  const system = `You are NEURA, an elite AI behavioral health system. You analyze digital behavior patterns and generate psychologically intelligent, personalized intervention plans. Write with clinical precision but human warmth. Use behavioral psychology principles. Never sound robotic.`;
+  const user = `Generate a personalized behavioral intervention plan for this profile:
+CSI Score: ${state.csi}/100
+Burnout Risk: ${state.burnoutRisk}%
+Detected patterns: ${state.patterns.map(p => p.label).join(', ')}
+Key factors: Sleep consistency ${state.factors.sleepConsistency}%, Focus fragmentation ${state.factors.focusFragmentation}%, Recovery quality ${state.factors.recoveryQuality}%
+
+Create a 3-stage intervention protocol with specific behavioral actions, timing, and expected outcomes. Reference the specific patterns detected. Sound deeply personalized.`;
+  callClaude(system, user, out, 'Generating personalized intervention protocol...').then(() => { btn.disabled = false; });
+}
+
+function generateReflection() {
+  const btn = document.getElementById('gen-reflect-btn');
+  btn.disabled = true;
+  const out = document.getElementById('reflection-output');
+  const system = `You are NEURA's reflection engine. Generate deeply personalized, psychologically intelligent weekly behavioral reflections. Write like a brilliant behavioral psychologist who genuinely understands the person. Use specific data points. Find non-obvious connections between behaviors. Sound like a trusted cognitive coach.`;
+  const user = `Generate a weekly behavioral reflection based on this data:
+CSI Score this week: ${state.csi}/100 (daily scores: [${state.weeklyCSI.join(', ')}])
+Primary patterns: ${state.patterns.slice(0, 4).map(p => p.label).join('; ')}
+Sleep consistency: ${state.factors.sleepConsistency}%
+Stimulation exposure: ${state.factors.stimulationExposure}%
+Recovery quality: ${state.factors.recoveryQuality}%
+Focus fragmentation: ${state.factors.focusFragmentation}%
+
+Write 3-4 paragraphs. Find the causal chains. Identify the non-obvious insight. End with one specific behavioral experiment for next week.`;
+  callClaude(system, user, out, 'Synthesizing behavioral intelligence...').then(() => { btn.disabled = false; });
+}
+
+function generateBurnoutAnalysis() {
+  const out = document.getElementById('burnout-output');
+  const system = `You are NEURA's burnout prediction module. You analyze multi-dimensional behavioral signals to predict and prevent burnout. Write with clinical authority and genuine care. Reference specific signals. Provide actionable, evidence-based interventions. Avoid clichés.`;
+  const user = `Perform a comprehensive burnout risk analysis:
+Current burnout risk: ${state.burnoutRisk}%
+Sleep debt accumulation: +1.2h over 5 days
+Cognitive switching rate: +22% above baseline
+Recovery quality deficit: -11%
+CSI trend: [${state.weeklyCSI.join(', ')}]
+Active patterns: ${state.patterns.map(p => p.label).join('; ')}
+
+Provide: (1) Root cause analysis of burnout drivers, (2) 14-day risk trajectory assessment, (3) Three high-leverage intervention points, (4) Recovery timeline estimate.`;
+  callClaude(system, user, out, 'Running predictive burnout model...');
+}
+
+function processInputData() {
+  const csi = computeCSI(state.inputValues);
+  const entry = {
+    date: new Date().toLocaleDateString('en', { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' }),
+    ...state.inputValues,
+    csi
+  };
+  state.history.push(entry);
+  try { localStorage.setItem('neura_history', JSON.stringify(state.history)); } catch (e) {}
+
+  // Update global CSI
+  state.csi = csi;
+  document.getElementById('csi-val').textContent = csi;
+  document.getElementById('csi-mini-val').textContent = csi;
+
+  // Update ring
+  const circ = 2 * Math.PI * 68;
+  document.getElementById('csi-ring').style.strokeDashoffset = circ - (csi / 100) * circ;
+
+  renderInputHistory();
+
+  const out = document.getElementById('analysis-output');
+  const system = `You are NEURA's real-time behavioral analysis engine. Analyze the submitted behavioral metrics and provide immediate, specific insights. Be concise, precise, and actionable. Reference the actual numbers.`;
+  const user = `Analyze today's behavioral submission:
+Screen time: ${state.inputValues.screenTime}h | Sleep: ${state.inputValues.sleepHours}h (quality: ${state.inputValues.sleepQuality}/10)
+Focus blocks: ${state.inputValues.focusBlocks} | Social media: ${state.inputValues.socialMediaMin}min
+App switches: ${state.inputValues.appSwitches} | Mood: ${state.inputValues.moodScore}/10
+Stress: ${state.inputValues.stressLevel}/10 | Exercise: ${state.inputValues.exerciseMin}min
+Computed CSI: ${csi}/100
+
+Give a sharp, 3-paragraph analysis: what the data reveals, what patterns are forming, and one specific thing to change tomorrow.`;
+  callClaude(system, user, out, 'Processing your behavioral data...');
+}
+
+// ╔═══════════════════════════════════════════╗
+// ║              BOOT                        ║
+// ╚═══════════════════════════════════════════╝
+
+initDashboard();
+initInterventions();
+initReflection();
+initInputPage();
+</script>
+
+
+</body></html>
